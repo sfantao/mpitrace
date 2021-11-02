@@ -3,7 +3,7 @@
  */
 
 // utility to parse my standard MPI wrappers
-// and add nvtx labeled ranges for all 
+// and add roctx labeled ranges for all 
 
 #include <stdio.h>
 #include <string.h>
@@ -56,13 +56,13 @@ int main(int argc, char * argv[])
       tvp = strstr(line, "struct timeval");
       logp = strstr(line, "LogEvent");
       if (tvp != NULL) {
-         sprintf(addline, "   nvtxRangeId_t range = nvtxRangeStartA(label[%s]);\n", idname[j]);
+         sprintf(addline, "   roctx_range_id_t range = roctxRangeStartA(label[%s]);\n", idname[j]);
          str = strcat(line, addline);
          fprintf(ofile, "%s", str);
          j++;
       }
       else if (logp != NULL) {
-         sprintf(addline, "   nvtxRangeEnd(range);\n");
+         sprintf(addline, "   roctxRangeStop(range);\n");
          str = strcat(addline, line);
          fprintf(ofile, "%s", addline);
       }
@@ -108,13 +108,13 @@ int main(int argc, char * argv[])
       tvp = strstr(line, "struct timeval");
       logp = strstr(line, "LogEvent");
       if (tvp != NULL) {
-         sprintf(addline, "   nvtxRangeId_t range = nvtxRangeStartA(label[%s]);\n", idname[j]);
+         sprintf(addline, "   roctx_range_id_t range = roctxRangeStartA(label[%s]);\n", idname[j]);
          str = strcat(line, addline);
          fprintf(ofile, "%s", str);
          j++;
       }
       else if (logp != NULL) {
-         sprintf(addline, "   nvtxRangeEnd(range);\n");
+         sprintf(addline, "   roctxRangeStop(range);\n");
          str = strcat(addline, line);
          fprintf(ofile, "%s", addline);
       }
