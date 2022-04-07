@@ -1642,7 +1642,7 @@ void mpi_iallgather(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLGATHER_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[IALLGATHER_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -1667,7 +1667,7 @@ void mpi_neighbor_allgather(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[IALLGATHER_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLGATHER_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLGATHER_ID]) 
@@ -1761,7 +1761,7 @@ void mpi_iallgatherv(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size, id;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLGATHERV_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[IALLGATHERV_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -1787,7 +1787,7 @@ void mpi_neighbor_allgatherv(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size, id;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[IALLGATHERV_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLGATHERV_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLGATHERV_ID]) 
@@ -2004,7 +2004,7 @@ void mpi_ialltoall(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALL_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALL_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2029,7 +2029,7 @@ void mpi_neighbor_alltoall(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALL_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALL_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALL_ID]) 
@@ -2127,7 +2127,7 @@ void mpi_ialltoallv(void * sbuf, int * scounts, int * sdisp, int * stype,
 {
    int i, count, rc, bytes, size, tasks;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALLV_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALLV_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2156,7 +2156,7 @@ void mpi_neighbor_alltoallv(void * sbuf, int * scounts, int * sdisp, int * stype
 {
    int i, count, rc, bytes, size, tasks;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALLV_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALLV_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALLV_ID]) 
@@ -2266,7 +2266,7 @@ void mpi_ialltoallw(void * sbuf, int * scounts, int * sdisp, int * stype,
 {
    int i, count, rc, bytes, sz, tasks;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALLW_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALLW_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2299,7 +2299,7 @@ void mpi_neighbor_alltoallw(void * sbuf, int * scounts, int * sdisp, int * stype
 {
    int i, count, rc, bytes, sz, tasks;
    struct timeval TV1, TV2;
-   roctx_range_id_t range = roctxRangeStartA(label[IALLTOALLW_ID]);
+   roctx_range_id_t range = roctxRangeStartA(label[NEIGHBOR_ALLTOALLW_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALLW_ID]) 
@@ -3002,6 +3002,7 @@ void mpi_file_close(int * fh, int * err)
    pmpi_file_close(fh, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_CLOSE_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3018,6 +3019,7 @@ void mpi_file_delete(char * filename, int * info, int * err, int charlen)
    pmpi_file_delete(filename, info, err, charlen);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_DELETE_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3039,6 +3041,7 @@ void mpi_file_iread(int * fh, void * buf, int * count, int * type,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IREAD_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3063,6 +3066,7 @@ void mpi_file_iread_at(int * fh, long long * offset, void * buf, int  * count,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IREAD_AT_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3084,6 +3088,7 @@ void mpi_file_iread_shared(int * fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IREAD_SHARED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3105,6 +3110,7 @@ void mpi_file_iwrite(int * fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IWRITE_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3129,6 +3135,7 @@ void mpi_file_iwrite_at(int * fh, long long * offset, void * buf, int * count,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IWRITE_AT_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3150,6 +3157,7 @@ void mpi_file_iwrite_shared(int * fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_IWRITE_SHARED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3167,6 +3175,7 @@ void mpi_file_open(int * comm, char * filename, int * mode,
    pmpi_file_open(comm, filename, mode, info, fh, err, charlen);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_OPEN_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3183,6 +3192,7 @@ void mpi_file_preallocate(int * fh, long long * size_bytes, int * err)
    pmpi_file_preallocate(fh, size_bytes, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_PREALLOCATE_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3204,6 +3214,7 @@ void mpi_file_read(int * fh, void * buf, int  * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3225,6 +3236,7 @@ void mpi_file_read_all(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ALL_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3246,6 +3258,7 @@ void mpi_file_read_all_begin(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ALL_BEGIN_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3262,6 +3275,7 @@ void mpi_file_read_all_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_read_all_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ALL_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3286,6 +3300,7 @@ void mpi_file_read_at(int* fh, long long * offset, void * buf, int * count,
   
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_AT_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3310,6 +3325,7 @@ void mpi_file_read_at_all(int* fh, long long * offset, void * buf, int * count,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_AT_ALL_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3334,6 +3350,7 @@ void mpi_file_read_at_all_begin(int* fh, long long * offset, void * buf,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_AT_ALL_BEGIN_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3350,6 +3367,7 @@ void mpi_file_read_at_all_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_read_at_all_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_AT_ALL_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3371,6 +3389,7 @@ void mpi_file_read_ordered(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ORDERED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3392,6 +3411,7 @@ void mpi_file_read_ordered_begin(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ORDERED_BEGIN_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3408,6 +3428,7 @@ void mpi_file_read_ordered_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_read_ordered_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_ORDERED_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3429,6 +3450,7 @@ void mpi_file_read_shared(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_READ_SHARED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3448,6 +3470,7 @@ void mpi_file_seek(int* fh, long long * offset, int * whence, int * err)
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_SEEK_ID, TV1, TV2, loff, -1, MPI_COMM_NULL);
    return;
 }
@@ -3467,6 +3490,7 @@ void mpi_file_seek_shared(int* fh, long long * offset, int * whence, int * err)
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_SEEK_SHARED_ID, TV1, TV2, loff, -1, MPI_COMM_NULL);
    return;
 }
@@ -3487,6 +3511,7 @@ void mpi_file_set_view(int* fh, long long * offset, int * etype, int * filetype,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_SET_VIEW_ID, TV1, TV2, loff, -1, MPI_COMM_NULL);
    return;
 }
@@ -3503,6 +3528,7 @@ void mpi_file_sync(int* fh, int * err)
    pmpi_file_sync(fh, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_SYNC_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3524,6 +3550,7 @@ void mpi_file_write(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3545,6 +3572,7 @@ void mpi_file_write_all(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ALL_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3566,6 +3594,7 @@ void mpi_file_write_all_begin(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ALL_BEGIN_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3582,6 +3611,7 @@ void mpi_file_write_all_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_write_all_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ALL_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3606,6 +3636,7 @@ void mpi_file_write_at(int* fh, long long * offset, void * buf, int * count,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_AT_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3630,6 +3661,7 @@ void mpi_file_write_at_all(int* fh, long long * offset, void * buf, int * count,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_AT_ALL_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3654,6 +3686,7 @@ void mpi_file_write_at_all_begin(int* fh, long long * offset, void * buf,
 
    loff = (long) (* offset);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_AT_ALL_BEGIN_ID, TV1, TV2, loff, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3670,6 +3703,7 @@ void mpi_file_write_at_all_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_write_at_all_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_AT_ALL_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3691,6 +3725,7 @@ void mpi_file_write_ordered(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ORDERED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3712,6 +3747,7 @@ void mpi_file_write_ordered_begin(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ORDERED_BEGIN_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }
@@ -3728,6 +3764,7 @@ void mpi_file_write_ordered_end(int* fh, void * buf, int * status, int * err)
    pmpi_file_write_ordered_end(fh, buf, status, err);
    WTIME(TV2);
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_ORDERED_END_ID, TV1, TV2, -1L, -1, MPI_COMM_NULL);
    return;
 }
@@ -3749,6 +3786,7 @@ void mpi_file_write_shared(int* fh, void * buf, int * count,
    pmpi_type_size(type, &bytes, &rc);
    bytes = (*count) * bytes;
 
+   roctxRangeStop(range);
    LogIOEvent(FILE_WRITE_SHARED_ID, TV1, TV2, -1L, bytes, MPI_COMM_NULL);
    return;
 }

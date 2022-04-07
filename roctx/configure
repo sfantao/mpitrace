@@ -138,11 +138,19 @@ fi
 if [ $rocm_flag == 1 ]; then
 # check for rocm components
   if [[ ! -z $rocm_path ]]; then
+    echo -n testing for libroctracer64.so...
+    if [ -f $rocm_path/lib/libroctracer64.so ]; then
+      echo found
+    else
+      echo libroctracer64.so not found ... check your ROCm path ... exiting
+      exit
+    fi
+
     echo -n testing for libroctx64.so...
     if [ -f $rocm_path/lib/libroctx64.so ]; then
       echo found
     else
-      echo libcudart.so not found ... check your cuda path ... exiting
+      echo libroctx64.so not found ... check your ROCm path ... exiting
       exit
     fi
 
@@ -151,6 +159,14 @@ if [ $rocm_flag == 1 ]; then
       echo found
     else
       echo roctracer_ext.h not found ... check your rocm path ... exiting
+      exit
+    fi
+
+    echo -n testing for roctx.h...
+    if [ -f $rocm_path/include/roctracer/roctx.h ]; then
+      echo found
+    else
+      echo roctx.h not found ... check your rocm path ... exiting
       exit
     fi
 
