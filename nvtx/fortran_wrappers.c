@@ -1642,7 +1642,7 @@ void mpi_iallgather(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[IALLGATHER_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLGATHER_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -1667,7 +1667,7 @@ void mpi_neighbor_allgather(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLGATHER_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[IALLGATHER_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLGATHER_ID]) 
@@ -1761,7 +1761,7 @@ void mpi_iallgatherv(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size, id;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[IALLGATHERV_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLGATHERV_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -1787,7 +1787,7 @@ void mpi_neighbor_allgatherv(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size, id;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLGATHERV_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[IALLGATHERV_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLGATHERV_ID]) 
@@ -2004,7 +2004,7 @@ void mpi_ialltoall(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALL_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALL_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2029,7 +2029,7 @@ void mpi_neighbor_alltoall(void * sbuf, int * scount, int * stype,
 {
    int rc, bytes, size;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALL_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALL_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALL_ID]) 
@@ -2127,7 +2127,7 @@ void mpi_ialltoallv(void * sbuf, int * scounts, int * sdisp, int * stype,
 {
    int i, count, rc, bytes, size, tasks;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALLV_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALLV_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2156,7 +2156,7 @@ void mpi_neighbor_alltoallv(void * sbuf, int * scounts, int * sdisp, int * stype
 {
    int i, count, rc, bytes, size, tasks;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALLV_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALLV_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALLV_ID]) 
@@ -2266,7 +2266,7 @@ void mpi_ialltoallw(void * sbuf, int * scounts, int * sdisp, int * stype,
 {
    int i, count, rc, bytes, sz, tasks;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALLW_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALLW_ID]);
    MPI_Comm c_comm;
 
    WTIME(TV1);
@@ -2299,7 +2299,7 @@ void mpi_neighbor_alltoallw(void * sbuf, int * scounts, int * sdisp, int * stype
 {
    int i, count, rc, bytes, sz, tasks;
    struct timeval TV1, TV2;
-   nvtxRangeId_t range = nvtxRangeStartA(label[NEIGHBOR_ALLTOALLW_ID]);
+   nvtxRangeId_t range = nvtxRangeStartA(label[IALLTOALLW_ID]);
    MPI_Comm c_comm;
 
    if (barrier_flag[NEIGHBOR_ALLTOALLW_ID]) 
