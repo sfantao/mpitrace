@@ -23,8 +23,8 @@
 #   define rocm_profiler_start() roctracer_start()
 #   define rocm_profiler_stop() roctracer_stop()
 # else
-#   define rocm_profiler_start() roctxProfilerPause(0)
-#   define rocm_profiler_stop() roctxProfilerResume(0)
+#   define rocm_profiler_start() roctxProfilerResume(0)
+#   define rocm_profiler_stop() roctxProfilerPause(0)
 # endif /*USE_ROCTX_LEGACY*/
 # endif /*USE_ROCTX*/
 #include <dlfcn.h>

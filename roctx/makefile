@@ -18,7 +18,7 @@ ROCM_LIB_LEGACY = -L /capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/
 CFLAGS_LEGACY = -g -O -fPIC $(VPROF) -I. $(MPI_INC) $(ROCM_INC_LEGACY) -DUSE_ROCTX -DUSE_ROCTX_LEGACY -DHAS_INIT_THREAD
 
 ROCM_INC = -I /capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/include -I /capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/include/rocprofiler-sdk-roctx
-ROCM_LIB = -L /capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/lib -lrocprofiler-sdk -Wl,-rpath=/capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/lib
+ROCM_LIB = -L /capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/lib -lrocprofiler-sdk -lrocprofiler-sdk-roctx -Wl,-rpath=/capstor/scratch/cscs/sfantao/build-megatron/sw/rocm-6.2.4/lib
 CFLAGS = -g -O -fPIC $(VPROF) -I. $(MPI_INC) $(ROCM_INC) -DUSE_ROCTX  -DHAS_INIT_THREAD
 
 #------------------------------------------

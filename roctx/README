@@ -13,20 +13,25 @@ Requirements : ROCm, mpicc with gcc as the underlying compiler
 Build/Install :
 
   (1) ./configure --with-rocm=/path/to/rocm
-  (2) make libmpitrace.so   
+  (2) make shared 
 
+The build will detect if the ROCm components are available to 
+support rocprof or rocprofv3. Since ROCm 6.2 rocporfv3 is recomended
+as rocprof will be deprecated. The library compatible with rocprofv3 
+will be named libmpitrace.so and the one compatible with rocprof will
+be named libmpitrace-legacy.so.
 ===============================================================================
 Typical use :
 
-  (1) mpirun -np 64 rocprofv3 --preload /path/to/libmpitrace.so -- your.exe ...
+  (1) mpirun -np 64 rocprofv3 --marker-trace --output-format pftrace --preload /path/to/libmpitrace.so -- your.exe ...
 
   or 
 
   (2) mpirun -np 64 rocprof --roctx-trace ./helper.sh your.exe ...
 
   where the helper.sh script preloads the library with 
-  LD_PRELOAD=/path/to/libmpitrace.so prior to invoking the application.
-  Setting  LD_PRELOAD prior to invking rocprof may not work as the preload
+  LD_PRELOAD=/path/to/libmpitrace-legacy.so prior to invoking the application.
+  Setting  LD_PRELOAD prior to invoking rocprof may not work as the preload
   information is not forwarded to the application environment.
   Another option is:
 
@@ -47,13 +52,18 @@ An example of a helper script is shown below for openmpi :
 
 cat > helper2.sh << EOF
 export TRACE_ALL_EVENTS=yes
+
+# For rocprofv3:
 LD_PRELOAD=/path/to/libmpitrace.so "$@"
+# or, if using rocprof
+LD_PRELOAD=/path/to/libmpitrace-legacy.so "$@"
 EOF
 chmod +x helper2.sh
 
 if [ $OMPI_COMM_WORLD_RANK = 31 ]; then
 
   for i in \
+    *_results.pftrace \
     results.copy_stats.csv \
     results.db \
     results.hip_stats.csv \
@@ -67,14 +77,19 @@ if [ $OMPI_COMM_WORLD_RANK = 31 ]; then
     fi
   done
 
-  rocprof --roctx-trace ./helper2.sh
+  # For rocprofv3:
+  rocprofv3 --marker-trace --output-format pftrace --preload /path/to/libmpitrace.so -- ./your-app
+  
+  # or for rocprof:
+  rocprof --roctx-trace ./helper2.sh ./your-app
+
 else
  ./helper2.sh
 fi
 
 In this example, rocprof is turned on for MPI rank 31, and profile data
-is saved in a file "results.json" a backup made for any pre-existing
-"results.json" file. One could be more specific about naming the rocprof
+is saved in a file "<pid>_results.pftrace" or "results.json" a backup made f
+or any pre-existing files. One could be more specific about naming the rocprof
 output, using for example a timestamp or a jobid.
 
 With rocprof it can be advantageous to limit profiling to a specific code
@@ -127,6 +142,8 @@ in fact source code access is not required at all.  The libmpitrace.so
 library can track the time that has elapsed after MPI_Init() when every 
 MPI function is called, and start and stop ROCm profiling as directed
 via environment variables.
+
+Rocprofv3 currently doesn't have an option to not profile from the start.
 
 To add roctx annotations, do the following steps :
   grep Log ref_mpitrace.c | awk -F"(" '{print $2}' | awk -F"," '{print $1}' >cids.txt

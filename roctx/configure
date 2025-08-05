@@ -187,6 +187,15 @@ if [ $rocm_flag == 1 ]; then
       exit
     fi
 
+    echo -n testing for librocprofiler-sdk-roctx.so...
+    if [ -f $rocm_path/lib/librocprofiler-sdk-roctx.so ]; then
+      echo found
+    else
+      found_rocm=0
+      echo librocprofiler-sdk-roctx.so not found ... check your rocm path ...
+      exit
+    fi
+
     echo -n testing for roctx.h...
     if [ -f $rocm_path/include/rocprofiler-sdk-roctx/roctx.h ]; then
       echo found
