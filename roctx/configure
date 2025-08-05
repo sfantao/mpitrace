@@ -138,36 +138,77 @@ fi
 if [ $rocm_flag == 1 ]; then
 # check for rocm components
   if [[ ! -z $rocm_path ]]; then
-    echo -n testing for libroctracer64.so...
+
+    found_rocm_legacy=1
+    found_rocm=1
+
+    # Look for legacy components.
+    echo -n testing for legacy libroctracer64.so...
     if [ -f $rocm_path/lib/libroctracer64.so ]; then
       echo found
     else
-      echo libroctracer64.so not found ... check your ROCm path ... exiting
-      exit
+      found_rocm_legacy=0
+      echo legacy libroctracer64.so not found
     fi
 
-    echo -n testing for libroctx64.so...
+    echo -n testing for legacy libroctx64.so...
     if [ -f $rocm_path/lib/libroctx64.so ]; then
       echo found
     else
-      echo libroctx64.so not found ... check your ROCm path ... exiting
-      exit
+      found_rocm_legacy=0
+      echo legacy libroctx64.so not found ...
     fi
 
-    echo -n testing for roctracer_ext.h...
+    echo -n testing for legacy roctracer_ext.h...
     if [ -f $rocm_path/include/roctracer/roctracer_ext.h ]; then
       echo found
     else
-      echo roctracer_ext.h not found ... check your rocm path ... exiting
+      found_rocm_legacy=0
+      echo legacy roctracer_ext.h not found ...
+      exit
+    fi
+
+    echo -n testing for legacy roctx.h...
+    if [ -f $rocm_path/include/roctracer/roctx.h ]; then
+      echo found
+    else
+      found_rocm_legacy=0
+      echo legacy roctx.h not found ... check your rocm path ...
+      exit
+    fi
+
+    # Look for components - using rocprofiler-sdk.
+    echo -n testing for librocprofiler-sdk.so...
+    if [ -f $rocm_path/lib/librocprofiler-sdk.so ]; then
+      echo found
+    else
+      found_rocm=0
+      echo librocprofiler-sdk.so not found ... check your rocm path ...
       exit
     fi
 
     echo -n testing for roctx.h...
-    if [ -f $rocm_path/include/roctracer/roctx.h ]; then
+    if [ -f $rocm_path/include/rocprofiler-sdk-roctx/roctx.h ]; then
       echo found
     else
-      echo roctx.h not found ... check your rocm path ... exiting
+      found_rocm=0
+      echo roctx.h not found ... check your rocm path ...
       exit
+    fi
+
+    # Exit if no components were found.
+    if [ $found_rocm -eq 1 ] ; then
+      echo ROCm components found ...
+      sed -i "s/BUILD_ROCM_CONFIGURE/$found_rocm/g" makefile
+    else
+      echo ROCm components not found ... check your rocm path ...
+    fi
+
+    if [ $found_rocm_legacy -eq 1 ] ; then
+      echo ROCm legacy components found ...
+      sed -i "s/BUILD_ROCM_LEGACY_CONFIGURE/$found_rocm_legacy/g" makefile
+    else
+      echo ROCm legacy components not found ... check your rocm path ...
     fi
 
     x_rocm_path="$(echo $rocm_path | sed 's/\//\\\//g')"

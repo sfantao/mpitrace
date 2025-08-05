@@ -1,10 +1,11 @@
 This directory has MPI wrappers that are instrumented with roctx
 markers.  The idea is to preload the wrapper library for use with
 ROCm's profiling tools, thus making MPI calls visible in ROCm's
-tools for visual timeline analysis.  The MPI wrappers also provide
-controls for roctracer_start()/roctracer_stop(), including support
-for time-window profiling.  This makes it possible to selectively
-profile a time-window without instrumenting the code.
+tools for visual timeline analysis. The MPI wrappers also provide
+controls for roctxProfilerResume()/roctxProfilerPause (or 
+roctracer_start()/roctracer_stop() for legacy ROCm versions), including 
+support for time-window profiling.  This makes it possible to 
+selectively profile a time-window without instrumenting the code.
 
 Requirements : ROCm, mpicc with gcc as the underlying compiler
 
@@ -17,7 +18,7 @@ Build/Install :
 ===============================================================================
 Typical use :
 
-  (1) rocprof --roctx-trace mpirun -np 64 ./helper.sh your.exe ...
+  (1) mpirun -np 64 rocprofv3 --preload /path/to/libmpitrace.so -- your.exe ...
 
   or 
 
@@ -76,7 +77,7 @@ is saved in a file "results.json" a backup made for any pre-existing
 "results.json" file. One could be more specific about naming the rocprof
 output, using for example a timestamp or a jobid.
 
-With rocporf it can be advantageous to limit profiling to a specific code
+With rocprof it can be advantageous to limit profiling to a specific code
 block using roctracer_start()/roctracer_stop() or to a specified time
 window.  The following illustrates the time-window profiling method, 
 where the intent is to capture rocprof data for MPI rank 31 with a start

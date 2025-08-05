@@ -247,12 +247,12 @@
 #ifdef USE_ROCTX
    if (time_window_profiling)  {
    /* disable ROCm profiling from MPI_Init when using time window profiling */
-      roctracer_stop();
+      rocm_profiler_stop();
    }
    else {
    /* use the TRACE* controls to start/stop cuda/nvtx profiling */
-      if ((trace_events==1) && (taskid>=trace_min_rank) && (taskid <=trace_max_rank)) roctracer_start();
-      else                                                                            roctracer_stop();
+      if ((trace_events==1) && (taskid>=trace_min_rank) && (taskid <=trace_max_rank)) rocm_profiler_start();
+      else                                                                            rocm_profiler_stop();
    }
 #endif
 

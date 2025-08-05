@@ -45,7 +45,7 @@ void LogEvent(int id, struct timeval TV1, struct timeval TV2,
              cudaProfilerStart();
 #endif
 #ifdef USE_ROCTX
-             roctracer_start();
+             rocm_profiler_start();
 #endif
 #ifdef HPM
              HPM_Start("window");
@@ -73,7 +73,7 @@ void LogEvent(int id, struct timeval TV1, struct timeval TV2,
               cudaProfilerStop();
 #endif
 #ifdef USE_ROCTX
-              roctracer_stop();
+              rocm_profiler_stop();
 #endif
 
               write_profile_data_myrank();
@@ -269,7 +269,7 @@ void LogIOEvent(int id, struct timeval TV1, struct timeval TV2,
              cudaProfilerStart();
 #endif
 #ifdef USE_ROCTX 
-             roctracer_start();
+             rocm_profiler_start();
 #endif
 #ifdef HPM
              HPM_Start("window");
@@ -297,7 +297,7 @@ void LogIOEvent(int id, struct timeval TV1, struct timeval TV2,
               cudaProfilerStop();
 #endif
 #ifdef USE_ROCTX 
-              roctracer_stop();
+              rocm_profiler_stop();
 #endif
               write_profile_data_myrank();
 #ifdef HPM
@@ -576,7 +576,7 @@ void mpitrace_trace_start(void)
         cudaProfilerStart();
 #endif
 #ifdef USE_ROCTX
-        roctracer_start();
+        rocm_profiler_start();
 #endif
     }
 }
@@ -593,7 +593,7 @@ void mpitrace_trace_start_(void)
         cudaProfilerStart();
 #endif
 #ifdef USE_ROCTX
-        roctracer_start();
+        rocm_profiler_start();
 #endif
     }
 }
@@ -609,7 +609,7 @@ void mpitrace_trace_stop(void)
     cudaProfilerStop();
 #endif
 #ifdef USE_ROCTX
-    roctracer_stop();
+    rocm_profiler_stop();
 #endif
 }
 
@@ -620,7 +620,7 @@ void mpitrace_trace_stop_(void)
     cudaProfilerStop();
 #endif
 #ifdef USE_ROCTX
-    roctracer_stop();
+    rocm_profiler_stop();
 #endif
 }
 
